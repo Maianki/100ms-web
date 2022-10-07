@@ -61,8 +61,8 @@ export const Logo = () => {
       src={
         logo ||
         (themeType === "dark"
-          ? require("../../images/logo-light.svg")
-          : require("../../images/logo-dark.svg"))
+          ? require("../../images/medfin-logo.png")
+          : require("../../images/medfin-logo.png"))
       }
       alt="Brand Logo"
       width={132}
