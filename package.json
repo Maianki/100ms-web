@@ -1,5 +1,5 @@
 {
-  "name": "100ms_edtech_template",
+  "name": "medfin",
   "version": "0.1.4",
   "private": true,
   "main": "dist/index.cjs.js",
@@ -28,6 +28,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-freeze": "^1.0.3",
+    "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "react-use": "^17.4.0",
     "react-window": "^1.8.7",

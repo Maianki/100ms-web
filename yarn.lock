@@ -18,7 +18,6 @@
     reselect "4.0.0"
     zustand "3.5.7"
 
-
 "@100mslive/hms-video@0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.5.2.tgz#8577ad7330a67673e8e716536cc9124ab03ccc5c"
@@ -29,7 +28,6 @@
     ua-parser-js "^1.0.1"
     uuid "^8.3.2"
     webrtc-adapter "^8.0.0"
-
 
 "@100mslive/hms-virtual-background@1.7.2":
   version "1.7.2"
@@ -42,7 +40,6 @@
     "@webassemblyjs/wasm-gen" "1.11.1"
     gifuct-js "^2.1.2"
     wasm-check "^2.0.2"
-
 
 "@100mslive/react-icons@0.4.2":
   version "0.4.2"
@@ -58,7 +55,6 @@
     react-intersection-observer "^8.33.1"
     react-resize-detector "^7.0.0"
     zustand "^3.6.2"
-
 
 "@100mslive/react-ui@0.4.2":
   version "0.4.2"
@@ -6141,6 +6137,11 @@ react-hotkeys-hook@^3.4.7:
   integrity sha512-+bbPmhPAl6ns9VkXkNNyxlmCAIyDAcWbB76O4I0ntr3uWCRuIQf/aRLartUahe9chVMPj+OEzzfk3CQSjclUEQ==
   dependencies:
     hotkeys-js "3.9.4"
+
+react-icons@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
+  integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==
 
 react-intersection-observer@^8.33.1:
   version "8.33.1"

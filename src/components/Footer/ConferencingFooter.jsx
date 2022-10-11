@@ -7,6 +7,7 @@ import {
   useScreenShare,
 } from "@100mslive/react-sdk";
 import { Flex, Tooltip, Footer as AppFooter } from "@100mslive/react-ui";
+import { ToggleCamera } from "../ToggleCamera";
 import { AudioVideoToggle } from "../AudioVideoToggle";
 import { LeaveRoom } from "../LeaveRoom";
 import { MoreSettings } from "../MoreSettings/MoreSettings";
@@ -91,6 +92,7 @@ export const ConferencingFooter = () => {
         </Flex>
       </AppFooter.Left>
       <AppFooter.Center>
+        <ToggleCamera />
         <AudioVideoToggle />
         <ScreenshareToggle />
         <PIPComponent />

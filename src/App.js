@@ -42,6 +42,7 @@ const defaultTokenEndpoint = process.env
 const envPolicyConfig = JSON.parse(process.env.REACT_APP_POLICY_CONFIG || "{}");
 
 let appName;
+
 if (window.location.host.includes("localhost")) {
   appName = "localhost";
 } else {
