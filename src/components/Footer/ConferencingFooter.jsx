@@ -23,6 +23,7 @@ import { ToggleWhiteboard } from "../../plugins/whiteboard";
 import { VirtualBackground } from "../../plugins/VirtualBackground/VirtualBackground";
 import { FeatureFlags } from "../../services/FeatureFlags";
 import { isScreenshareSupported } from "../../common/utils";
+import { usePlayVideoPlaylistWhenAlone } from "../hooks/usePlayVideoPlaylistWhenAlone";
 
 const TranscriptionButton = React.lazy(() =>
   import("../../plugins/transcription")
@@ -69,6 +70,7 @@ const ScreenshareAudio = () => {
 };
 
 export const ConferencingFooter = () => {
+  usePlayVideoPlaylistWhenAlone();
   return (
     <AppFooter.Root>
       <AppFooter.Left>

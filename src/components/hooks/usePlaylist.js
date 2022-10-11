@@ -16,7 +16,6 @@ export const usePlaylist = type => {
   const playlistAction = isAudioPlaylist
     ? hmsActions.audioPlaylist
     : hmsActions.videoPlaylist;
-
   return {
     active,
     hasNext: selection.hasNext,

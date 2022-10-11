@@ -214,7 +214,10 @@ const RouteList = ({ getUserToken, getDetails }) => {
         path="/:roomId/"
         element={<RedirectToPreview getDetails={getDetails} />}
       />
-      <Route path="*" element={<ErrorPage error="Invalid URL!" />} />
+      <Route
+        path="*"
+        element={<ErrorPage error="Welcome, Thanks for choosing Medfin" />}
+      />
     </Routes>
   );
 };

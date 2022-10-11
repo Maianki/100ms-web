@@ -33,6 +33,7 @@ const useAmbientMusic = (threshold = 5 * 1000) => {
   const [userHasEnabled, setEnableAmbientMusic] = useSetUiSettings(
     UI_SETTINGS.enableAmbientMusic
   ); // user settings
+
   const [playing, setPlaying] = useState(false);
   const { alone: aloneRightNow, aloneForLong } = useWhenAloneInRoom(threshold);
   // play if user has enabled the setting and been alone for some time
