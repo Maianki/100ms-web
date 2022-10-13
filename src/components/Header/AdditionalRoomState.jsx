@@ -45,6 +45,7 @@ export const getRecordingText = (
  * Display state of recording, streaming, playlist, whiteboard
  */
 export const AdditionalRoomState = () => {
+  console.log("Here---------->");
   const playlist = usePlaylistMusic();
   const isAudioOnly = useUISettings(UI_SETTINGS.isAudioOnly);
   const screenshareAudio = useScreenshareAudio();

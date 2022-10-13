@@ -3,6 +3,7 @@ import { useFullscreen, useToggle } from "react-use";
 import screenfull from "screenfull";
 import {
   selectVideoPlaylist,
+  selectLocalPeerRoleName,
   selectVideoPlaylistVideoTrackByPeerID,
   useHMSActions,
   useHMSStore,
@@ -14,12 +15,15 @@ import { UI_SETTINGS } from "../../common/constants";
 import { useUISettings } from "../AppData/useUISettings";
 
 export const VideoPlayer = React.memo(({ peerId }) => {
+  const localRole = useHMSStore(selectLocalPeerRoleName);
   const videoTrack = useHMSStore(selectVideoPlaylistVideoTrackByPeerID(peerId));
   const active = useHMSStore(selectVideoPlaylist.selectedItem);
   const isAudioOnly = useUISettings(UI_SETTINGS.isAudioOnly);
   const hmsActions = useHMSActions();
   const ref = useRef(null);
   const [show, toggle] = useToggle(false);
+
+  console.log(localRole);
   const isFullscreen = useFullscreen(ref, show, {
     onClose: () => toggle(false),
   });
@@ -30,7 +34,7 @@ export const VideoPlayer = React.memo(({ peerId }) => {
       css={{ w: "100%", h: "100%" }}
       ref={ref}
     >
-      {active && (
+      {active && localRole !== "patient" && (
         <Flex
           justify="between"
           align="center"
