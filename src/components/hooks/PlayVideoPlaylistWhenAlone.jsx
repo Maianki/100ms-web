@@ -4,7 +4,6 @@ import {
   selectLocalPeerRoleName,
   selectIsConnectedToRoom,
   selectPeerCount,
-  selectVideoPlaylist,
   useHMSActions,
 } from "@100mslive/react-sdk";
 import { usePlaylist } from "./usePlaylist";
