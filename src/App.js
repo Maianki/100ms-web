@@ -216,7 +216,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
       />
       <Route
         path="*"
-        element={<ErrorPage error="Welcome, Thanks for choosing Medfin" />}
+        element={<ErrorPage error="Thanks for choosing Medfin" />}
       />
     </Routes>
   );
