@@ -86,7 +86,6 @@ export function EdtechComponent({
     .map(el => parseInt(el));
 
   const getUserTokenCallback = useCallback(getUserToken, []); //eslint-disable-line
-
   return (
     <ErrorBoundary>
       <HMSThemeProvider
