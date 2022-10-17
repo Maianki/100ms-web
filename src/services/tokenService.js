@@ -56,7 +56,7 @@ export async function getUserToken(name) {
   };
 
   const code = extractUrlCode();
-  console.log("code running", code);
+
   const url = getBackendEndpoint() + "get-token";
 
   const headers = {
@@ -72,8 +72,6 @@ export async function getUserToken(name) {
     }),
     headers,
   });
-
-  console.log("response is :", response);
 
   if (!response.ok) {
     let error = new Error("Request failed!");

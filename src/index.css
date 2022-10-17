@@ -24,3 +24,13 @@ pre {
 :focus {
   outline: none;
 }
+
+
+.btn-appointment{
+  background-color: #ee7f00;
+  color: #FFFF;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 9px 20px;
+}

@@ -1,9 +1,16 @@
 import React from "react";
 import { Flex, Box, Text, useTheme } from "@100mslive/react-ui";
+import { useNavigate } from "react-router-dom";
 import { CREATE_ROOM_DOC_URL } from "../common/constants";
 
 function ErrorPage({ error }) {
   const themeType = useTheme().themeType;
+
+  const navigate = useNavigate();
+
+  const handleAppointment = () => {
+    navigate("/preview/633fceb2e08863a3f2f82f4c/patient");
+  };
   return (
     <Flex
       align="center"
@@ -23,7 +30,7 @@ function ErrorPage({ error }) {
           }
           alt="Error Background"
         />
-        {window.location.hostname === "localhost" ? (
+        {!window.location.hostname === "localhost" ? (
           <Flex
             align="center"
             direction="column"
@@ -55,9 +62,12 @@ function ErrorPage({ error }) {
             css={{ position: "absolute", size: "100%", top: "33.33%", left: 0 }}
           >
             <Text variant="h2">Welcome</Text>
-            <Text variant="h4" css={{ mt: "1.75rem" }}>
+            <Text variant="h5" css={{ m: "1.75rem" }}>
               {error}
             </Text>
+            <button className="btn-appointment" onClick={handleAppointment}>
+              Book Appointment
+            </button>
           </Flex>
         )}
       </Box>
