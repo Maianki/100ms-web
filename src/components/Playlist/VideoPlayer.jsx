@@ -34,7 +34,7 @@ export const VideoPlayer = React.memo(({ peerId }) => {
       css={{ w: "100%", h: "100%" }}
       ref={ref}
     >
-      {active && localRole !== "patient" && (
+      {active && localRole !== "customer" && (
         <Flex
           justify="between"
           align="center"

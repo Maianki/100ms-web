@@ -25,11 +25,11 @@ const MetaActions = ({ isMobile = false, compact = false }) => {
           <HandIcon />
         </IconButton>
       </Tooltip>
-      <Tooltip title={`${isBRBOn ? `I'm back` : `I'll be right back`}`}>
+      {/* <Tooltip title={`${isBRBOn ? `I'm back` : `I'll be right back`}`}>
         <IconButton onClick={toggleBRB} active={!isBRBOn} data-testid="brb_btn">
           <BrbIcon />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
     </Flex>
   );
 };

@@ -5,6 +5,7 @@ import {
   selectIsAllowedToPublish,
   useHMSStore,
   useScreenShare,
+  useDevices
 } from "@100mslive/react-sdk";
 import { Flex, Tooltip, Footer as AppFooter } from "@100mslive/react-ui";
 import { ToggleCamera } from "../ToggleCamera";
@@ -70,11 +71,12 @@ const ScreenshareAudio = () => {
 };
 
 export const ConferencingFooter = () => {
+  const { allDevices } = useDevices();
   return (
     <AppFooter.Root>
       <AppFooter.Left>
-        <ScreenshareAudio />
-        <Playlist type={HMSPlaylistType.audio} />
+        {/* <ScreenshareAudio /> */}
+        {/* <Playlist type={HMSPlaylistType.audio} /> */}
         {/* <Playlist type={HMSPlaylistType.video} /> */}
         <PlayVideoPlaylistWhenAlone />
         {FeatureFlags.enableWhiteboard ? <ToggleWhiteboard /> : null}
@@ -94,10 +96,10 @@ export const ConferencingFooter = () => {
         </Flex>
       </AppFooter.Left>
       <AppFooter.Center>
-        <ToggleCamera />
+        {allDevices.videoInput.length === 2 && <ToggleCamera />}
         <AudioVideoToggle />
         <ScreenshareToggle />
-        <PIPComponent />
+        {/* <PIPComponent /> */}
         <MoreSettings />
         <LeaveRoom />
         <Flex

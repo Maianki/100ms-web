@@ -64,9 +64,10 @@ const PreviewJoin = ({ token, onJoin, env, skipPreview, initialName }) => {
       isAudioMuted: !isLocalAudioEnabled,
       isVideoMuted: !isLocalVideoEnabled,
     });
-    join();
+    join({ userName: name, authToken: token });
     onJoin && onJoin();
   }, [
+    token,
     join,
     isLocalAudioEnabled,
     isLocalVideoEnabled,
