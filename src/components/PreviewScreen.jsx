@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { useSearchParam } from "react-use";
 import { v4 } from "uuid";
+import axios from "axios";
 import { Box, Flex, Loading, styled } from "@100mslive/react-ui";
 import { Header } from "./Header";
 import { ErrorDialog } from "../primitives/DialogContent";
@@ -10,6 +11,7 @@ import PreviewContainer from "./Preview/PreviewContainer";
 import SidePane from "../layouts/SidePane";
 import { useNavigation } from "./hooks/useNavigation";
 import getToken from "../services/tokenService";
+import { useRoom } from "../context/room-context";
 import {
   QUERY_PARAM_SKIP_PREVIEW_HEADFUL,
   QUERY_PARAM_NAME,
@@ -33,8 +35,18 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
   const navigate = useNavigation();
   const tokenEndpoint = useTokenEndpoint();
   const [, setIsHeadless] = useSetUiSettings(UI_SETTINGS.isHeadless);
-  const { roomId: urlRoomId, role: userRole } = useParams(); // from the url
-  const [token, setToken] = useState(null);
+  const {
+    token,
+    urlRoomId,
+    userRole,
+    tokenHandler,
+    roleHandler,
+    urlRoomIdHandler,
+  } = useRoom();
+  // const { roomId: urlRoomId, role: userRole } = useParams(); // from the url not needed
+  // const [token, setToken] = useState(undefined);
+  // const [userRole, setRole] = useState("");
+  // const [urlRoomId, setUrlRoomId] = useState("");
   const [error, setError] = useState({ title: "", body: "" });
   // way to skip preview for automated tests, beam recording and streaming
   const beamInToken = useSearchParam("token") === "beam_recording"; // old format to remove
@@ -50,25 +62,56 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
     useSearchParam(QUERY_PARAM_NAME) || (skipPreview ? "Beam" : "");
   let authToken = useSearchParam(QUERY_PARAM_AUTH_TOKEN);
 
+  let url =
+    "https://services.medfin.in/video/meeting-info?token=1a7a3cee6945aa05a599fd1f0e1255cd2d376d31e056f26284ae7db80417b400#";
+
   useEffect(() => {
-    if (authToken) {
-      setToken(authToken);
-      return;
-    }
-    if (!tokenEndpoint || !urlRoomId) {
-      return;
-    }
-    const getTokenFn = !userRole
-      ? () => getUserToken(v4())
-      : () => getToken(tokenEndpoint, v4(), userRole, urlRoomId);
-    getTokenFn()
-      .then(token => {
-        setToken(token);
-      })
-      .catch(error => {
-        setError(convertPreviewError(error));
-      });
-  }, [tokenEndpoint, urlRoomId, getUserToken, userRole, authToken]);
+    (async () => {
+      const response = await axios.get(url);
+      console.log(response.data);
+      if (response?.data?.statusCode === 200) {
+        const { jwtToken, actor, room } = response.data.data;
+        tokenHandler(jwtToken);
+        roleHandler(actor);
+        urlRoomIdHandler(room);
+        if (!tokenEndpoint || !urlRoomId) {
+          return;
+        }
+        const getTokenFn = !userRole
+          ? () => getUserToken(v4())
+          : () => getToken(tokenEndpoint, v4(), userRole, urlRoomId);
+        getTokenFn()
+          .then(token => {
+            tokenHandler(token);
+          })
+          .catch(error => {
+            setError(convertPreviewError(error));
+          });
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getUserToken, url, urlRoomId, userRole]);
+
+  console.log(urlRoomId, userRole, token);
+  // useEffect(() => {
+  //   if (authToken) {
+  //     setToken(authToken);
+  //     return;
+  //   }
+  //   if (!tokenEndpoint || !urlRoomId) {
+  //     return;
+  //   }
+  //   const getTokenFn = !userRole
+  //     ? () => getUserToken(v4())
+  //     : () => getToken(tokenEndpoint, v4(), userRole, urlRoomId);
+  //   getTokenFn()
+  //     .then(token => {
+  //       setToken(token);
+  //     })
+  //     .catch(error => {
+  //       setError(convertPreviewError(error));
+  //     });
+  // }, [tokenEndpoint, urlRoomId, getUserToken, userRole, authToken]);
 
   const onJoin = () => {
     !directJoinHeadful && setIsHeadless(skipPreview);

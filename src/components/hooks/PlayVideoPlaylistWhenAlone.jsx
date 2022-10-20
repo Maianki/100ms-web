@@ -13,9 +13,9 @@ export function PlayVideoPlaylistWhenAlone() {
   const localRole = useHMSStore(selectLocalPeerRoleName);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
   const peerCount = useHMSStore(selectPeerCount);
-  // const playlist = useHMSStore(selectVideoPlaylist.list);
+  //const playlist = useHMSStore(selectVideoPlaylist.list);
   const alone = isConnected && peerCount === 1;
-  const { actions, list } = usePlaylist("isVideoPlaylist");
+  const { actions } = usePlaylist("isVideoPlaylist");
 
   // const firstVideo = list[0];
   // const id = firstVideo?.id;
@@ -23,14 +23,11 @@ export function PlayVideoPlaylistWhenAlone() {
   useEffect(() => {
     let timerID = setTimeout(() => {
       if (alone && localRole === "patient") {
-        console.log("----->", list);
         (async () => {
-          console.log("hello");
           await actions.play("video1");
         })();
       } else {
         (async () => {
-          console.log(actions);
           await hmsActions.videoPlaylist.stop("video1");
         })();
       }

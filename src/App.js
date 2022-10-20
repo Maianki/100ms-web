@@ -145,8 +145,6 @@ const RedirectToPreview = ({ getDetails }) => {
     getDetails();
   }, [roomId]); //eslint-disable-line
 
-  console.error({ roomId, role });
-
   if (!roomId && !role) {
     return <Navigate to="/" />;
   }
