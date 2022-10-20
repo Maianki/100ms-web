@@ -22,7 +22,7 @@ export function PlayVideoPlaylistWhenAlone() {
 
   useEffect(() => {
     let timerID = setTimeout(() => {
-      if (alone && localRole === "patient") {
+      if (alone && localRole === "customer") {
         console.log("----->", list);
         (async () => {
           console.log("hello");
