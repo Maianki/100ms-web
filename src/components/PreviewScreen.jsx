@@ -9,7 +9,7 @@ import { useSetUiSettings, useTokenEndpoint } from "./AppData/useUISettings";
 import PreviewContainer from "./Preview/PreviewContainer";
 import SidePane from "../layouts/SidePane";
 import { useNavigation } from "./hooks/useNavigation";
-import getToken from "../services/tokenService";
+// import getToken from "../services/tokenService";
 import { useRoom } from "../context/room-context";
 import { useParams } from "react-router-dom";
 import { useSearchParam } from "react-use";
@@ -41,12 +41,11 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
     token,
     urlRoomId,
     userRole,
-    meetingId,
     tokenHandler,
     roleHandler,
-    urlRoomIdHandler,
+    meetingIdHandler,
   } = useRoom();
-  const { roomId: urlRoomId1, role: userRole1 } = useParams(); // from the url not needed
+  const { meetingId } = useParams(); // from the url not needed
   // const [token, setToken] = useState(null);
   const [error, setError] = useState({ title: "", body: "" });
   // way to skip preview for automated tests, beam recording and streaming
@@ -63,19 +62,17 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
     useSearchParam(QUERY_PARAM_NAME) || (skipPreview ? "Beam" : "");
   let authToken = useSearchParam(QUERY_PARAM_AUTH_TOKEN);
 
-  let url = "https://webhook-100ms.ankitkumain.repl.co/get-token";
+  let url = `https://betaservices.medfin.in/video/meeting-info?token=${meetingId}`;
 
+  meetingIdHandler(meetingId);
   useEffect(() => {
     (async () => {
       try {
         const response = await axios.get(url);
         console.log(response.data);
         if (response?.data?.statusCode === 200) {
-          const { jwtToken, actor, name, room} = response.data.data;
-          tokenHandler(
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3Nfa2V5IjoiNjMzYzVlYTA0MjA4NzgwYmY2NjUwMzcxIiwicm9vbV9pZCI6IjYzNGNkODk5ZGNkNmMxNWJmMmIxMGQ3YSIsInVzZXJfaWQiOiJvZnFxem9wdCIsInJvbGUiOiJjdXN0b21lciIsImp0aSI6ImYwY2QzNGQ1LTRhMTUtNDBlZS1iZTAyLTc5NzhhMDcyZGVjOSIsInR5cGUiOiJhcHAiLCJ2ZXJzaW9uIjoyLCJleHAiOjE2NjY0MDE2MDl9.ndDxwUTA5NUqDwQ9U1vq_8JNTmSsGhXqMzLidi0yTGI"
-          );
-          // console.log(jwtToken);
+          const { jwtToken, actor, name, room } = response.data.data;
+          tokenHandler(jwtToken);
           Cookies.set("room", room);
           Cookies.set("role", actor);
           roleHandler(actor);
@@ -91,9 +88,6 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
   const onJoin = () => {
     !directJoinHeadful && setIsHeadless(skipPreview);
     let meetingURL = `/meeting/${meetingId}`;
-    // if (userRole) {
-    //   meetingURL += `/${userRole}`;
-    // }
     navigate(meetingURL);
   };
 
@@ -113,7 +107,6 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
         justify="center"
         align="center"
       >
-        {console.log("Latest...", token)}
         {token ? (
           <>
             <PreviewContainer

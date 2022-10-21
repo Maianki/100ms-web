@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useParams,
 } from "react-router-dom";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 import { HMSThemeProvider, Box } from "@100mslive/react-ui";
@@ -21,6 +22,7 @@ import { Init } from "./components/init/Init";
 import { hmsActions, hmsNotifications, hmsStats, hmsStore } from "./hms.js";
 import { FeatureFlags } from "./services/FeatureFlags";
 import { useRoom } from "./context/room-context";
+
 import {
   getUserToken as defaultGetUserToken,
   getBackendEndpoint,
@@ -140,7 +142,8 @@ export function EdtechComponent({
 }
 
 const RedirectToPreview = ({ getDetails }) => {
-  const { urlRoomId: roomId, userRole: role, meetingId } = useRoom();
+  const { urlRoomId: roomId, userRole: role } = useRoom();
+  const { meetingId } = useParams();
   useEffect(() => {
     getDetails();
   }, [roomId]); //eslint-disable-line
@@ -170,14 +173,6 @@ const RouteList = ({ getUserToken, getDetails }) => {
             </Suspense>
           }
         />
-        <Route
-          path=":meetingId"
-          element={
-            <Suspense fallback={<FullPageProgress />}>
-              <PreviewScreen getUserToken={getUserToken} />
-            </Suspense>
-          }
-        />
       </Route>
       <Route path="meeting">
         <Route
@@ -188,17 +183,8 @@ const RouteList = ({ getUserToken, getDetails }) => {
             </Suspense>
           }
         />
-        <Route
-          path=":meetingId"
-          element={
-            <Suspense fallback={<FullPageProgress />}>
-              <Conference />
-            </Suspense>
-          }
-        />
       </Route>
       <Route path="leave">
-        <Route path=":meetingId" element={<PostLeave />} />
         <Route path=":meetingId" element={<PostLeave />} />
       </Route>
       <Route

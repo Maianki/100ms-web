@@ -10,11 +10,11 @@ import {
   defaultPreviewPreference,
 } from "./hooks/useUserPreferences";
 import { getRoutePrefix } from "../common/utils";
-import { useRoom } from "../context/room-context";
+import { useParams } from "react-router-dom";
 
 const PostLeave = () => {
   const navigate = useNavigation();
-  const { roomId, role } = useRoom();
+  const { meetingId } = useParams();
   const [previewPreference] = useUserPreferences(
     UserPreferencesKeys.PREVIEW,
     defaultPreviewPreference
@@ -65,8 +65,8 @@ const PostLeave = () => {
           </Text>
           <Button
             onClick={() => {
-              let previewUrl = "/preview/" + roomId;
-              if (role) previewUrl += "/" + role;
+              let previewUrl = "/preview/";
+              if (meetingId) previewUrl += meetingId;
               navigate(previewUrl);
               ToastManager.clearAllToast();
             }}

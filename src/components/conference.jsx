@@ -16,9 +16,11 @@ import { Footer } from "./Footer";
 import { useNavigation } from "./hooks/useNavigation";
 import { useIsHeadless } from "./AppData/useUISettings";
 import { useRoom } from "../context/room-context";
+import { useParams } from "react-router-dom";
 
 const Conference = () => {
-  const { urlRoomId: roomId, userRole: role, meetingId } = useRoom();
+  const { urlRoomId: roomId, userRole: role } = useRoom();
+  const { meetingId } = useParams();
   const navigate = useNavigation();
   const isHeadless = useIsHeadless();
   const roomState = useHMSStore(selectRoomState);

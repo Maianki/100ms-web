@@ -7,12 +7,16 @@ export const RoomContextProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [userRole, setRole] = useState("");
   const [urlRoomId, setUrlRoomId] = useState("");
-  const [meetingId] = useState("zqi-rsj-tfx");
+  const [meetingId, setMeetingId] = useState("");
 
   useEffect(() => {
     setRole(Cookies.get("role"));
     setUrlRoomId(Cookies.get("room"));
   }, []);
+
+  const meetingIdHandler = meetId => {
+    setMeetingId(_ => meetId);
+  };
 
   const tokenHandler = tokenparam => {
     setToken(_ => tokenparam);
@@ -35,6 +39,7 @@ export const RoomContextProvider = ({ children }) => {
         meetingId,
         tokenHandler,
         roleHandler,
+        meetingIdHandler,
         urlRoomIdHandler,
       }}
     >

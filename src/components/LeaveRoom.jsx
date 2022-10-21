@@ -31,13 +31,13 @@ import {
 } from "../primitives/DialogContent";
 import { useNavigation } from "./hooks/useNavigation";
 import { isStreamingKit } from "../common/utils";
-import { useRoom } from "../context/room-context";
+import { useParams } from "react-router-dom";
 
 export const LeaveRoom = () => {
+  const { meetingId } = useParams();
   const navigate = useNavigation();
   const role = useHMSStore(selectLocalPeerRoleName);
   const roomId = useHMSStore(selectRoomID);
-  const { meetingId } = useRoom();
   const [showEndRoomModal, setShowEndRoomModal] = useState(false);
   const [lockRoom, setLockRoom] = useState(false);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
@@ -45,7 +45,7 @@ export const LeaveRoom = () => {
   const hmsActions = useHMSActions();
 
   const redirectToLeavePage = () => {
-    if (role) {
+    if (role && roomId) {
       navigate("/leave/" + meetingId);
     } else {
       navigate("/leave/" + meetingId);
