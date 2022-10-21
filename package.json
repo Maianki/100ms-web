@@ -22,6 +22,7 @@
     "eventemitter2": "^6.4.7",
     "hls.js": "^1.2.3",
     "js-confetti": "^0.10.2",
+    "js-cookie": "^3.0.1",
     "logrocket": "^2.2.0",
     "logrocket-react": "^5.0.1",
     "mobx": "^6.3.12",

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { useParams } from "react-router-dom";
-import { useSearchParam } from "react-use";
+import Cookies from "js-cookie";
 import { v4 } from "uuid";
 import axios from "axios";
 import { Box, Flex, Loading, styled } from "@100mslive/react-ui";
@@ -13,6 +12,7 @@ import { useNavigation } from "./hooks/useNavigation";
 import getToken from "../services/tokenService";
 import { useRoom } from "../context/room-context";
 import { useParams } from "react-router-dom";
+import { useSearchParam } from "react-use";
 import {
   QUERY_PARAM_SKIP_PREVIEW_HEADFUL,
   QUERY_PARAM_NAME,
@@ -38,15 +38,15 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
   const tokenEndpoint = useTokenEndpoint();
   const [, setIsHeadless] = useSetUiSettings(UI_SETTINGS.isHeadless);
   const {
-    token: token1,
-    urlRoomId: urlRoomId1,
-    userRole: userRole1,
+    token,
+    urlRoomId,
+    userRole,
     tokenHandler,
     roleHandler,
     urlRoomIdHandler,
   } = useRoom();
-  const { roomId: urlRoomId, role: userRole } = useParams(); // from the url not needed
-  const [token, setToken] = useState(null);
+  const { roomId: urlRoomId1, role: userRole1 } = useParams(); // from the url not needed
+  // const [token, setToken] = useState(null);
   const [error, setError] = useState({ title: "", body: "" });
   // way to skip preview for automated tests, beam recording and streaming
   const beamInToken = useSearchParam("token") === "beam_recording"; // old format to remove
@@ -62,58 +62,30 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
     useSearchParam(QUERY_PARAM_NAME) || (skipPreview ? "Beam" : "");
   let authToken = useSearchParam(QUERY_PARAM_AUTH_TOKEN);
 
-  let url =
-    "https://services.medfin.in/video/meeting-info?token=1a7a3cee6945aa05a599fd1f0e1255cd2d376d31e056f26284ae7db80417b400#";
+  let url = "https://webhook-100ms.ankitkumain.repl.co/get-token";
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get(url);
-      console.log(response.data);
-      if (response?.data?.statusCode === 200) {
-        const { jwtToken, actor, room, name } = response.data.data;
-        tokenHandler(jwtToken);
-        roleHandler(actor);
-        setName(name);
-        // urlRoomIdHandler(room);
-        // if (!tokenEndpoint || !urlRoomId) {
-        //   return;
-        // }
-        // const getTokenFn = !userRole
-        //   ? () => getUserToken(v4())
-        //   : () => getToken(tokenEndpoint, v4(), userRole, urlRoomId);
-        // getTokenFn()
-        //   .then(token => {
-        //     tokenHandler(token);
-        //   })
-        //   .catch(error => {
-        //     setError(convertPreviewError(error));
-        //   });
+      try {
+        const response = await axios.get(url);
+        console.log(response.data);
+        if (response?.data?.statusCode === 200) {
+          const { jwtToken, actor, name, room} = response.data.data;
+          tokenHandler(
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2Nlc3Nfa2V5IjoiNjMzYzVlYTA0MjA4NzgwYmY2NjUwMzcxIiwicm9vbV9pZCI6IjYzNGNkODk5ZGNkNmMxNWJmMmIxMGQ3YSIsInVzZXJfaWQiOiJvZnFxem9wdCIsInJvbGUiOiJjdXN0b21lciIsImp0aSI6ImYwY2QzNGQ1LTRhMTUtNDBlZS1iZTAyLTc5NzhhMDcyZGVjOSIsInR5cGUiOiJhcHAiLCJ2ZXJzaW9uIjoyLCJleHAiOjE2NjY0MDE2MDl9.ndDxwUTA5NUqDwQ9U1vq_8JNTmSsGhXqMzLidi0yTGI"
+          );
+          // console.log(jwtToken);
+          Cookies.set("room", room);
+          Cookies.set("role", actor);
+          roleHandler(actor);
+          setName(name);
+        }
+      } catch (error) {
+        setError(convertPreviewError(error));
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getUserToken, url, urlRoomId, userRole]);
-
-  // console.log(token === token1);
-  // console.log("---> This is using new method", urlRoomId1, userRole1, token1);
-  useEffect(() => {
-    if (authToken) {
-      setToken(authToken);
-      return;
-    }
-    if (!tokenEndpoint || !urlRoomId) {
-      return;
-    }
-    const getTokenFn = !userRole
-      ? () => getUserToken(v4())
-      : () => getToken(tokenEndpoint, v4(), userRole, urlRoomId);
-    getTokenFn()
-      .then(token => {
-        setToken(token);
-      })
-      .catch(error => {
-        setError(convertPreviewError(error));
-      });
-  }, [tokenEndpoint, urlRoomId, getUserToken, userRole, authToken]);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenEndpoint, urlRoomId, userRole, url]);
 
   const onJoin = () => {
     !directJoinHeadful && setIsHeadless(skipPreview);
@@ -140,6 +112,7 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
         justify="center"
         align="center"
       >
+        {console.log("Latest...", token)}
         {token ? (
           <>
             <PreviewContainer

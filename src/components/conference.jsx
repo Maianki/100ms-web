@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { usePrevious } from "react-use";
 import {
   selectRoomState,
@@ -16,10 +15,11 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { useNavigation } from "./hooks/useNavigation";
 import { useIsHeadless } from "./AppData/useUISettings";
+import { useRoom } from "../context/room-context";
 
 const Conference = () => {
+  const { urlRoomId: roomId, userRole: role } = useRoom();
   const navigate = useNavigation();
-  const { roomId, role } = useParams();
   const isHeadless = useIsHeadless();
   const roomState = useHMSStore(selectRoomState);
   const prevState = usePrevious(roomState);

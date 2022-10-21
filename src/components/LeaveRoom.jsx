@@ -1,8 +1,9 @@
 import { Fragment, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   selectIsConnectedToRoom,
+  selectLocalPeerRoleName,
   selectPermissions,
+  selectRoomID,
   useHMSActions,
   useHMSStore,
 } from "@100mslive/react-sdk";
@@ -33,7 +34,8 @@ import { isStreamingKit } from "../common/utils";
 
 export const LeaveRoom = () => {
   const navigate = useNavigation();
-  const params = useParams();
+  const role = useHMSStore(selectLocalPeerRoleName);
+  const roomId = useHMSStore(selectRoomID);
   const [showEndRoomModal, setShowEndRoomModal] = useState(false);
   const [lockRoom, setLockRoom] = useState(false);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
@@ -41,10 +43,10 @@ export const LeaveRoom = () => {
   const hmsActions = useHMSActions();
 
   const redirectToLeavePage = () => {
-    if (params.role) {
-      navigate("/leave/" + params.roomId + "/" + params.role);
+    if (role) {
+      navigate("/leave/" + roomId + "/" + role);
     } else {
-      navigate("/leave/" + params.roomId);
+      navigate("/leave/" + roomId);
     }
   };
 

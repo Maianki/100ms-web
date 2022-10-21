@@ -1,14 +1,20 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const RoomContext = createContext({});
 
 export const RoomContextProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [userRole, setRole] = useState("");
-  const [urlRoomId, setUrlRoomId] = useState("634ce962dcd6c15bf2b10d7d");
+  const [urlRoomId, setUrlRoomId] = useState("");
 
-  const tokenHandler = token => {
-    setToken(_ => token);
+  useEffect(() => {
+    setRole(Cookies.get("role"));
+    setUrlRoomId(Cookies.get("room"));
+  }, []);
+
+  const tokenHandler = tokenparam => {
+    setToken(_ => tokenparam);
   };
 
   const roleHandler = userRole => {

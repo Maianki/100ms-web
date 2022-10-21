@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useParams,
 } from "react-router-dom";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 import { HMSThemeProvider, Box } from "@100mslive/react-ui";
@@ -21,6 +20,7 @@ import ErrorPage from "./components/ErrorPage";
 import { Init } from "./components/init/Init";
 import { hmsActions, hmsNotifications, hmsStats, hmsStore } from "./hms.js";
 import { FeatureFlags } from "./services/FeatureFlags";
+import { useRoom } from "./context/room-context";
 import {
   getUserToken as defaultGetUserToken,
   getBackendEndpoint,
@@ -140,7 +140,7 @@ export function EdtechComponent({
 }
 
 const RedirectToPreview = ({ getDetails }) => {
-  const { roomId, role } = useParams();
+  const { urlRoomId: roomId, userRole: role } = useRoom();
   useEffect(() => {
     getDetails();
   }, [roomId]); //eslint-disable-line

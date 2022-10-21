@@ -5,7 +5,7 @@ import {
   selectIsAllowedToPublish,
   useHMSStore,
   useScreenShare,
-  useDevices
+  useDevices,
 } from "@100mslive/react-sdk";
 import { Flex, Tooltip, Footer as AppFooter } from "@100mslive/react-ui";
 import { ToggleCamera } from "../ToggleCamera";

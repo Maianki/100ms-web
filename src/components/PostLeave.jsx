@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { ExitIcon } from "@100mslive/react-icons";
 import { Button, Flex, Box, Text, textEllipsis } from "@100mslive/react-ui";
 import { ToastManager } from "./Toast/ToastManager";
@@ -11,10 +10,11 @@ import {
   defaultPreviewPreference,
 } from "./hooks/useUserPreferences";
 import { getRoutePrefix } from "../common/utils";
+import { useRoom } from "../context/room-context";
 
 const PostLeave = () => {
   const navigate = useNavigation();
-  const { roomId, role } = useParams();
+  const { roomId, role } =  useRoom();
   const [previewPreference] = useUserPreferences(
     UserPreferencesKeys.PREVIEW,
     defaultPreviewPreference
