@@ -18,7 +18,7 @@ import { useIsHeadless } from "./AppData/useUISettings";
 import { useRoom } from "../context/room-context";
 
 const Conference = () => {
-  const { urlRoomId: roomId, userRole: role } = useRoom();
+  const { urlRoomId: roomId, userRole: role, meetingId } = useRoom();
   const navigate = useNavigation();
   const isHeadless = useIsHeadless();
   const roomState = useHMSStore(selectRoomState);
@@ -39,10 +39,18 @@ const Conference = () => {
         isConnectedToRoom
       )
     ) {
-      if (role) navigate(`/preview/${roomId || ""}/${role}`);
+      if (role) navigate(`/preview/${meetingId}`);
       else navigate(`/preview/${roomId || ""}`);
     }
-  }, [isConnectedToRoom, prevState, roomState, navigate, role, roomId]);
+  }, [
+    isConnectedToRoom,
+    prevState,
+    roomState,
+    navigate,
+    role,
+    roomId,
+    meetingId,
+  ]);
 
   useEffect(() => {
     // beam doesn't need to store messages, saves on unnecessary store updates in large calls

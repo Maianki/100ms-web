@@ -41,6 +41,7 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
     token,
     urlRoomId,
     userRole,
+    meetingId,
     tokenHandler,
     roleHandler,
     urlRoomIdHandler,
@@ -89,10 +90,10 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
 
   const onJoin = () => {
     !directJoinHeadful && setIsHeadless(skipPreview);
-    let meetingURL = `/meeting/${urlRoomId}`;
-    if (userRole) {
-      meetingURL += `/${userRole}`;
-    }
+    let meetingURL = `/meeting/${meetingId}`;
+    // if (userRole) {
+    //   meetingURL += `/${userRole}`;
+    // }
     navigate(meetingURL);
   };
 

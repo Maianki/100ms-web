@@ -31,11 +31,13 @@ import {
 } from "../primitives/DialogContent";
 import { useNavigation } from "./hooks/useNavigation";
 import { isStreamingKit } from "../common/utils";
+import { useRoom } from "../context/room-context";
 
 export const LeaveRoom = () => {
   const navigate = useNavigation();
   const role = useHMSStore(selectLocalPeerRoleName);
   const roomId = useHMSStore(selectRoomID);
+  const { meetingId } = useRoom();
   const [showEndRoomModal, setShowEndRoomModal] = useState(false);
   const [lockRoom, setLockRoom] = useState(false);
   const isConnected = useHMSStore(selectIsConnectedToRoom);
@@ -44,9 +46,9 @@ export const LeaveRoom = () => {
 
   const redirectToLeavePage = () => {
     if (role) {
-      navigate("/leave/" + roomId + "/" + role);
+      navigate("/leave/" + meetingId);
     } else {
-      navigate("/leave/" + roomId);
+      navigate("/leave/" + meetingId);
     }
   };
 

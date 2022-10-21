@@ -14,7 +14,7 @@ import { useRoom } from "../context/room-context";
 
 const PostLeave = () => {
   const navigate = useNavigation();
-  const { roomId, role } =  useRoom();
+  const { roomId, role } = useRoom();
   const [previewPreference] = useUserPreferences(
     UserPreferencesKeys.PREVIEW,
     defaultPreviewPreference

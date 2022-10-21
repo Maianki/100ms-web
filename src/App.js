@@ -140,7 +140,7 @@ export function EdtechComponent({
 }
 
 const RedirectToPreview = ({ getDetails }) => {
-  const { urlRoomId: roomId, userRole: role } = useRoom();
+  const { urlRoomId: roomId, userRole: role, meetingId } = useRoom();
   useEffect(() => {
     getDetails();
   }, [roomId]); //eslint-disable-line
@@ -155,9 +155,7 @@ const RedirectToPreview = ({ getDetails }) => {
     return <Navigate to="/" />;
   }
 
-  return (
-    <Navigate to={`${getRoutePrefix()}/preview/${roomId}/${role || ""}`} />
-  );
+  return <Navigate to={`${getRoutePrefix()}/preview/${meetingId}`} />;
 };
 
 const RouteList = ({ getUserToken, getDetails }) => {
@@ -165,7 +163,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
     <Routes>
       <Route path="preview">
         <Route
-          path=":roomId/:role"
+          path=":meetingId"
           element={
             <Suspense fallback={<FullPageProgress />}>
               <PreviewScreen getUserToken={getUserToken} />
@@ -173,7 +171,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
           }
         />
         <Route
-          path=":roomId"
+          path=":meetingId"
           element={
             <Suspense fallback={<FullPageProgress />}>
               <PreviewScreen getUserToken={getUserToken} />
@@ -183,7 +181,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
       </Route>
       <Route path="meeting">
         <Route
-          path=":roomId/:role"
+          path=":meetingId"
           element={
             <Suspense fallback={<FullPageProgress />}>
               <Conference />
@@ -191,7 +189,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
           }
         />
         <Route
-          path=":roomId"
+          path=":meetingId"
           element={
             <Suspense fallback={<FullPageProgress />}>
               <Conference />
@@ -200,15 +198,15 @@ const RouteList = ({ getUserToken, getDetails }) => {
         />
       </Route>
       <Route path="leave">
-        <Route path=":roomId/:role" element={<PostLeave />} />
-        <Route path=":roomId" element={<PostLeave />} />
+        <Route path=":meetingId" element={<PostLeave />} />
+        <Route path=":meetingId" element={<PostLeave />} />
       </Route>
       <Route
-        path="/:roomId/:role"
+        path="/:meetingId"
         element={<RedirectToPreview getDetails={getDetails} />}
       />
       <Route
-        path="/:roomId/"
+        path="/:meetingId/"
         element={<RedirectToPreview getDetails={getDetails} />}
       />
       <Route path="*" element={<ErrorPage error="Book your Appointment" />} />
