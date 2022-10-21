@@ -51,7 +51,7 @@ export default async function getToken(tokenEndpoint, userId, role, roomId) {
 export async function getUserToken(name) {
   const extractUrlCode = () => {
     const path = window.location.pathname;
-    const regex = /(\/streaming)?\/(preview|meeting)\/(?<code>[^/]+)/;
+    const regex = /(\/streaming)?\/(preview|meeting|session)\/(?<code>[^/]+)/;
     return path.match(regex)?.groups?.code || null;
   };
 
@@ -64,6 +64,7 @@ export async function getUserToken(name) {
     subdomain: process.env.REACT_APP_TOKEN_GENERATION_ENDPOINT_DOMAIN,
   };
 
+  console.log("I am getting called you moron!!");
   const response = await fetchWithRetry(url, {
     method: "post",
     body: JSON.stringify({

@@ -4,6 +4,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import LogRocket from "logrocket";
 import setupLogRocketReact from "logrocket-react";
+import { RoomContextProvider } from "./context/room-context";
 
 if (
   process.env.NODE_ENV === "production" &&
@@ -16,7 +17,9 @@ if (
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <RoomContextProvider>
+      <App />
+    </RoomContextProvider>
   </React.StrictMode>
 );
 

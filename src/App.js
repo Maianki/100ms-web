@@ -21,6 +21,8 @@ import ErrorPage from "./components/ErrorPage";
 import { Init } from "./components/init/Init";
 import { hmsActions, hmsNotifications, hmsStats, hmsStore } from "./hms.js";
 import { FeatureFlags } from "./services/FeatureFlags";
+import { useRoom } from "./context/room-context";
+
 import {
   getUserToken as defaultGetUserToken,
   getBackendEndpoint,
@@ -140,12 +142,11 @@ export function EdtechComponent({
 }
 
 const RedirectToPreview = ({ getDetails }) => {
-  const { roomId, role } = useParams();
+  const { urlRoomId: roomId, userRole: role } = useRoom();
+  const { meetingId } = useParams();
   useEffect(() => {
     getDetails();
   }, [roomId]); //eslint-disable-line
-
-  console.error({ roomId, role });
 
   if (!roomId && !role) {
     return <Navigate to="/" />;
@@ -157,9 +158,7 @@ const RedirectToPreview = ({ getDetails }) => {
     return <Navigate to="/" />;
   }
 
-  return (
-    <Navigate to={`${getRoutePrefix()}/preview/${roomId}/${role || ""}`} />
-  );
+  return <Navigate to={`${getRoutePrefix()}/preview/${meetingId}`} />;
 };
 
 const RouteList = ({ getUserToken, getDetails }) => {
@@ -167,15 +166,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
     <Routes>
       <Route path="preview">
         <Route
-          path=":roomId/:role"
-          element={
-            <Suspense fallback={<FullPageProgress />}>
-              <PreviewScreen getUserToken={getUserToken} />
-            </Suspense>
-          }
-        />
-        <Route
-          path=":roomId"
+          path=":meetingId"
           element={
             <Suspense fallback={<FullPageProgress />}>
               <PreviewScreen getUserToken={getUserToken} />
@@ -185,15 +176,7 @@ const RouteList = ({ getUserToken, getDetails }) => {
       </Route>
       <Route path="meeting">
         <Route
-          path=":roomId/:role"
-          element={
-            <Suspense fallback={<FullPageProgress />}>
-              <Conference />
-            </Suspense>
-          }
-        />
-        <Route
-          path=":roomId"
+          path=":meetingId"
           element={
             <Suspense fallback={<FullPageProgress />}>
               <Conference />
@@ -202,15 +185,14 @@ const RouteList = ({ getUserToken, getDetails }) => {
         />
       </Route>
       <Route path="leave">
-        <Route path=":roomId/:role" element={<PostLeave />} />
-        <Route path=":roomId" element={<PostLeave />} />
+        <Route path=":meetingId" element={<PostLeave />} />
       </Route>
       <Route
-        path="/:roomId/:role"
+        path="/:meetingId"
         element={<RedirectToPreview getDetails={getDetails} />}
       />
       <Route
-        path="/:roomId/"
+        path="/:meetingId/"
         element={<RedirectToPreview getDetails={getDetails} />}
       />
       <Route path="*" element={<ErrorPage error="Book your Appointment" />} />

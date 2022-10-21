@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSearchParam } from "react-use";
+import Cookies from "js-cookie";
 import { v4 } from "uuid";
+import axios from "axios";
 import { Box, Flex, Loading, styled } from "@100mslive/react-ui";
 import { Header } from "./Header";
 import { ErrorDialog } from "../primitives/DialogContent";
@@ -9,7 +9,10 @@ import { useSetUiSettings, useTokenEndpoint } from "./AppData/useUISettings";
 import PreviewContainer from "./Preview/PreviewContainer";
 import SidePane from "../layouts/SidePane";
 import { useNavigation } from "./hooks/useNavigation";
-import getToken from "../services/tokenService";
+// import getToken from "../services/tokenService";
+import { useRoom } from "../context/room-context";
+import { useParams } from "react-router-dom";
+import { useSearchParam } from "react-use";
 import {
   QUERY_PARAM_SKIP_PREVIEW_HEADFUL,
   QUERY_PARAM_NAME,
@@ -30,11 +33,20 @@ import {
 
 const env = process.env.REACT_APP_ENV;
 const PreviewScreen = React.memo(({ getUserToken }) => {
+  const [name, setName] = useState("");
   const navigate = useNavigation();
   const tokenEndpoint = useTokenEndpoint();
   const [, setIsHeadless] = useSetUiSettings(UI_SETTINGS.isHeadless);
-  const { roomId: urlRoomId, role: userRole } = useParams(); // from the url
-  const [token, setToken] = useState(null);
+  const {
+    token,
+    urlRoomId,
+    userRole,
+    tokenHandler,
+    roleHandler,
+    meetingIdHandler,
+  } = useRoom();
+  const { meetingId } = useParams(); // from the url not needed
+  // const [token, setToken] = useState(null);
   const [error, setError] = useState({ title: "", body: "" });
   // way to skip preview for automated tests, beam recording and streaming
   const beamInToken = useSearchParam("token") === "beam_recording"; // old format to remove
@@ -50,32 +62,32 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
     useSearchParam(QUERY_PARAM_NAME) || (skipPreview ? "Beam" : "");
   let authToken = useSearchParam(QUERY_PARAM_AUTH_TOKEN);
 
+  let url = `https://betaservices.medfin.in/video/meeting-info?token=${meetingId}`;
+
+  meetingIdHandler(meetingId);
   useEffect(() => {
-    if (authToken) {
-      setToken(authToken);
-      return;
-    }
-    if (!tokenEndpoint || !urlRoomId) {
-      return;
-    }
-    const getTokenFn = !userRole
-      ? () => getUserToken(v4())
-      : () => getToken(tokenEndpoint, v4(), userRole, urlRoomId);
-    getTokenFn()
-      .then(token => {
-        setToken(token);
-      })
-      .catch(error => {
+    (async () => {
+      try {
+        const response = await axios.get(url);
+        console.log(response.data);
+        if (response?.data?.statusCode === 200) {
+          const { jwtToken, actor, name, room } = response.data.data;
+          tokenHandler(jwtToken);
+          Cookies.set("room", room);
+          Cookies.set("role", actor);
+          roleHandler(actor);
+          setName(name);
+        }
+      } catch (error) {
         setError(convertPreviewError(error));
-      });
-  }, [tokenEndpoint, urlRoomId, getUserToken, userRole, authToken]);
+      }
+    })();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenEndpoint, urlRoomId, userRole, url]);
 
   const onJoin = () => {
     !directJoinHeadful && setIsHeadless(skipPreview);
-    let meetingURL = `/meeting/${urlRoomId}`;
-    if (userRole) {
-      meetingURL += `/${userRole}`;
-    }
+    let meetingURL = `/meeting/${meetingId}`;
     navigate(meetingURL);
   };
 
@@ -98,7 +110,7 @@ const PreviewScreen = React.memo(({ getUserToken }) => {
         {token ? (
           <>
             <PreviewContainer
-              initialName={initialName}
+              initialName={initialName || name}
               skipPreview={skipPreview}
               env={env}
               onJoin={onJoin}

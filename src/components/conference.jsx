@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { usePrevious } from "react-use";
 import {
   selectRoomState,
@@ -16,10 +15,13 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { useNavigation } from "./hooks/useNavigation";
 import { useIsHeadless } from "./AppData/useUISettings";
+import { useRoom } from "../context/room-context";
+import { useParams } from "react-router-dom";
 
 const Conference = () => {
+  const { urlRoomId: roomId, userRole: role } = useRoom();
+  const { meetingId } = useParams();
   const navigate = useNavigation();
-  const { roomId, role } = useParams();
   const isHeadless = useIsHeadless();
   const roomState = useHMSStore(selectRoomState);
   const prevState = usePrevious(roomState);
@@ -39,10 +41,18 @@ const Conference = () => {
         isConnectedToRoom
       )
     ) {
-      if (role) navigate(`/preview/${roomId || ""}/${role}`);
+      if (role) navigate(`/preview/${meetingId}`);
       else navigate(`/preview/${roomId || ""}`);
     }
-  }, [isConnectedToRoom, prevState, roomState, navigate, role, roomId]);
+  }, [
+    isConnectedToRoom,
+    prevState,
+    roomState,
+    navigate,
+    role,
+    roomId,
+    meetingId,
+  ]);
 
   useEffect(() => {
     // beam doesn't need to store messages, saves on unnecessary store updates in large calls

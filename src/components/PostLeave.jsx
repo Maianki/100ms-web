@@ -1,5 +1,4 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { ExitIcon } from "@100mslive/react-icons";
 import { Button, Flex, Box, Text, textEllipsis } from "@100mslive/react-ui";
 import { ToastManager } from "./Toast/ToastManager";
@@ -11,10 +10,11 @@ import {
   defaultPreviewPreference,
 } from "./hooks/useUserPreferences";
 import { getRoutePrefix } from "../common/utils";
+import { useParams } from "react-router-dom";
 
 const PostLeave = () => {
   const navigate = useNavigation();
-  const { roomId, role } = useParams();
+  const { meetingId } = useParams();
   const [previewPreference] = useUserPreferences(
     UserPreferencesKeys.PREVIEW,
     defaultPreviewPreference
@@ -65,8 +65,8 @@ const PostLeave = () => {
           </Text>
           <Button
             onClick={() => {
-              let previewUrl = "/preview/" + roomId;
-              if (role) previewUrl += "/" + role;
+              let previewUrl = "/preview/";
+              if (meetingId) previewUrl += meetingId;
               navigate(previewUrl);
               ToastManager.clearAllToast();
             }}
